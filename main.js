@@ -18,19 +18,37 @@ function executeCode(line) {
     var code = document.getElementById('code').value.split("\n");
 
     // Find all of the ifs and loops and add them to a list
+    var l = [];
     for (var p = 0; p < code.length; p++) {
+        code[p] = code[p].trim();
         if (code[p].startsWith("if")) {
-            ifs.push(p);
-        } else if (code[p].startsWith("while") || code[p].startsWith("for") || code[p].startsWith("do")) {
-            loops.push(p);
+            l.push(p);
+        } else if (code[p].startsWith("endif")) {
+            if (l.length != 0){
+                var t = [l.pop(),p];
+                ifs.push(t)
+            } else {
+                error("Your if statements do not match up. (Too many endifs)");
+            }
         }
     }
+    if (l.length != 0){
+        error("Your if statements do not match up. (Too many ifs)");
+    }
+    console.log(ifs);
+    // for (var p = 0; p < code.length; p++) {
+    //     if (code[p].startsWith("if")) {
+    //         ifs.push(p);
+    //     } else if (code[p].startsWith("while") || code[p].startsWith("for") || code[p].startsWith("do")) {
+    //         loops.push(p);
+    //     }
+    // }
 
     // The fun stuff
     for (var i = line; i < code.length; i++) {
         var current = code[i];
-        console.log("Line " + (i + 1))
-        console.log(variables)
+        //console.log("Line " + (i + 1))
+        //console.log(variables)
 
         // Remove any comments that the user puts into the code
         current = current.split("//")[0];
@@ -63,8 +81,8 @@ function executeCode(line) {
                 var1 = var1.replace("= ", "=");
                 var var2 = var1.split("=")[0]; // Var Name
                 var var3 = var1.split("=")[1]; // Var Value
-                console.log("name " + var2);
-                console.log("value " + var3);
+                //console.log("name " + var2);
+                //console.log("value " + var3);
                 if (/^[a-zA-Z0-9]*$/.test(var2) == false) {
                     error(var2 + " contains a special character that variable names cannot contain")
                 }
@@ -152,7 +170,7 @@ function executeCode(line) {
 
                         //Grabs the variable name from current point to the comma/end of line
                         var phrase = print1.substring(x, (x + spaceIndex))
-                        console.log(phrase)
+                        //console.log(phrase)
                         //Move x forward to the end of the variable name
                         x = x + phrase.length
                         phrase = phrase.trim()
@@ -228,7 +246,7 @@ function getVariable(varName) {
 function getVariableType(varName) {
     for (var i = 0; i < variables.length; i++) {
         if (variables[i][0] == varName) {
-            console.log("Type: " + variables[i][2])
+            //console.log("Type: " + variables[i][2])
             return variables[i][2];
         }
     }
@@ -300,7 +318,7 @@ function formatEquals(var1) {
 
 function isInteger(var1) {
     for (var i = 0; i < var1.length; i++) {
-        console.log()
+        //console.log()
         if(var1[0] == "-")
             i++
         if (var1[i] === "0" || var1[i] === "1" || var1[i] === "2" || var1[i] === "3" || var1[i] === "4" || var1[i] === "5" || var1[i] === "6" || var1[i] === "7" || var1[i] === "8" || var1[i] === "9")
@@ -344,7 +362,7 @@ function isReal(var1) {
 //TO DO: add arithmetic with spaces, add negative numbers
 function evaluatePhrase(phrase) {
     //phrase = phrase.replace(" ","")
-    console.log("P: " + phrase)
+    //console.log("P: " + phrase)
     var isNumPhrase = true
     var str = "";
     var expNext = false
@@ -359,22 +377,22 @@ function evaluatePhrase(phrase) {
     //Add quotation checking
     for (x = 0; x < phrase.length; x++) {
         if (phrase[x] == "(") {
-            console.log("( found")
+            //console.log("( found")
             leftPar = true;
             leftParPos = x
         }
         else if (phrase[x] == ")") {
-            console.log(") found")
+            //console.log(") found")
             if (leftPar) {
                 evalPhrase = evaluatePhrase(phrase.slice(leftParPos + 1, x))
                 var start = 0
                 if (phrase[0] == "(")
                     start = 1
-                console.log(phrase.slice(0, leftParPos))
+                //console.log(phrase.slice(0, leftParPos))
                 phrase = phrase.slice(0, leftParPos) + " " + evalPhrase + " " + phrase.slice(x + 2, phrase.length)
                 phrase = phrase.replace(/\s{2,}/g, ' ');
-                console.log(evalPhrase)
-                console.log("New P: " + phrase)
+                //console.log(evalPhrase)
+                //console.log("New P: " + phrase)
                 leftPar = false
             }
             else
@@ -385,8 +403,8 @@ function evaluatePhrase(phrase) {
     var parts = phrase.split(" ")
 
     while (i < parts.length && isNumPhrase) {
-        console.log(parts[i])
-        console.log(str)
+        //console.log(parts[i])
+        //console.log(str)
 
         // try {
         //     if(parts[i].contains("\"") || parts[i].contains("\'"))
@@ -422,7 +440,7 @@ function evaluatePhrase(phrase) {
             //Checks if all the variables used in the phrase are numbers
             if (!(getVariableType(parts[i]) == 0 || getVariableType(parts[i]) == 1)) {
                 isNumPhrase = false
-                console.log("Not numPhrase")
+                //console.log("Not numPhrase")
             }
             //Replaces the variable name with its value
             else {
@@ -443,9 +461,9 @@ function evaluatePhrase(phrase) {
         }
         else if (parts[i] == '^') {
             expNext = true
-            console.log(tempPos)
-            console.log(temp)
-            console.log(str)
+            //console.log(tempPos)
+            //console.log(temp)
+            //console.log(str)
             str = str.slice(0, tempPos)
             str += " Math.pow(" + temp + ","
         }
@@ -464,7 +482,7 @@ function evaluatePhrase(phrase) {
             }
         }
         else {
-            console.log("not valid")
+            //console.log("not valid")
             isNumPhrase = false
             // return
         }
@@ -474,7 +492,7 @@ function evaluatePhrase(phrase) {
     i = 0
     //Evaluates the arithmetic phrase
     if (isNumPhrase) {
-        console.log(str)
+        //console.log(str)
         return (eval(str))
 
     }
@@ -496,9 +514,9 @@ function evaluatePhrase(phrase) {
             }
         } while (match != null);
 
-        console.log(parts)
+        //console.log(parts)
         while (i < parts.length) {
-            console.log(parts)
+            //console.log(parts)
             //Makes sure each piece of the phrase is valid
             if (checkVariableExistance(parts[i])) {
                 //Checks if all the variables used in the phrase are numbers
@@ -528,7 +546,7 @@ function evaluatePhrase(phrase) {
                 parts[i] = parts[i].replace("\"", "")
                 parts[i] = parts[i].replace("\'", "")
                 parts[i] = parts[i].replace("\'", "")
-                console.log(parts[i])
+                //console.log(parts[i])
             }
 
             i++
@@ -545,7 +563,7 @@ function evaluatePhrase(phrase) {
                 else
                     error("The + operator should not be used at the beginning of the expression")
                 if (i + 1 < parts.length) {
-                    console.log(parts[i + 1])
+                    //console.log(parts[i + 1])
                     str += parts[i + 1]
                 }
                 else
@@ -553,7 +571,7 @@ function evaluatePhrase(phrase) {
             }
             i++
         }
-        console.log(str)
+        //console.log(str)
         return (str)
     }
 

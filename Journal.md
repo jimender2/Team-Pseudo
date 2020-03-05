@@ -51,3 +51,6 @@ He also created stylized sheets for each web page.
 ### 3/1/2020, 5:00pm - Fixed output text and added Dark/Light Toggle
 Kurtis fixed the output text after the editor runs.
 He also added functionality to the Dark/Light toggle.
+
+### 3/5/2020, 10:00am - 3:30pm - Work on if statements
+Begin work on redoing if statements.
