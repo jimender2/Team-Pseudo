@@ -357,9 +357,7 @@ function executeCode(line) {
                 }
             }
         } else if (current.startsWith("End While")) {
-            //temp
             i = getLoop(i);
-
         } else if (current.startsWith("Do")) {
             //Nothing
         } else if (current.startsWith("End Do While")) {
@@ -372,6 +370,40 @@ function executeCode(line) {
             }
         } else if (current.startsWith("End Module")) {
             return();
+        } else if (current.startsWith("Call ")) {
+            current = current.substring(5);
+            current = current.split("(")[0];
+            current = current.trim();
+
+            var start = -1;
+
+            for (var p = 0; p < funtions.length; p++) {
+                if (funtions[p][0].startsWith(current)){
+                    start = functions[p][1];
+                    break;
+                }
+            }
+
+            var tempVarStorage = [];
+
+            if (start != 1) {
+                // Store Variables temporarily in a holding variable
+                for (var p = 0; p < variables.length; p++){
+                    tempVarStorage.push(variables[p]);
+                }
+
+                // Run new module
+                executeCode(start);
+
+                // Add Variables back out of temp storage
+                variables = [];
+                for (var p = 0; p < tempVarStorage.length; p++){
+                    variables.push(tempVarStorage[p]);
+                }
+            } else {
+                error(current + " is not a defined Module.");
+            }
+
         } else {
             error("Line " + (i + 1) + " has invalid syntax.");
         }

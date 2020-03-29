@@ -63,3 +63,9 @@ Jonathan implemented while loops and did extensive testing of them.
 
 ### 3/17/2020, 11:00AM - 2:30PM - Fixed Variable evaluation Issue and Do While Loops Were Added.
 Issue was discovered by Jonathan and Josiah where variables could be modified during evaluation.  A mini fix was implemented.  Do While Loops were also added.
+
+### 3/24/2020, 1:00PM - 3:00PM - Testing of Website
+Jonathan did some testing of the website to see if features were properly working.
+
+### 3/29/2020, 3:00PM - 6:00PM - Added main module evaluation
+Jonathan added main module evaluation and did some branch merging to start bringing everything together.
