@@ -77,7 +77,7 @@ Camryn overhauled the front end. Cleaned up the style, rearranged the text boxes
 Kurtis added numbered lines to the input box. All notable browsers were tested except Safari.
 
 ### 3/28/2020, 7:00 PM - Fixed Spacing and Implemented Copy Button
-Kurtis fixed some spacing in the input box, implemented the copy button for the output box, and made so random elements cannot be highlighted. 
+Kurtis fixed some spacing in the input box, implemented the copy button for the output box, and made so random elements cannot be highlighted.
 
 ### 3/30/2020 4:00 PM - 7:00 PM - Cleaned up documentation and examples pages
 Ryan cleaned up the html of the documentation and examples pages and made the two have their own .html pages.
@@ -93,3 +93,6 @@ Camryn made the question button pull up the documentation and made it possible t
 
 ### 4/10/2020 9:00 PM - 9:30 PM - Team Presentation Meeting
 Team Pseudo met as a team via Zoom to plan out the URCA group presentation.
+
+### 4/14/2020 10:00 AM - 3:45 PM - Work on redoing the if Statements
+Possible If Statement fix.

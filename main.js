@@ -51,6 +51,7 @@ function executeCode(line) {
     // are allowed.
     var code = document.getElementById('code').value.split("\n");
 
+    // TODO: Move this to a the main method eventually
     // Find all of the loops and add them to a list
     var tempLoops = [];
     for (var p = 0; p < code.length; p++) {
@@ -81,72 +82,72 @@ function executeCode(line) {
         current = current.split("//")[0];
 
         //Checks if the line is inside an if statement
-        if (inIf) {
-            testCond = current.trim()
-            //console.log(testCond)
-            if (testCond == "End If") {
-                inIf = false
-                result = null
-                continue
-            }
-            else if (testCond == "Else" && result == true) {
-                result = false
-                continue
-            }
-            else if (testCond == "Else" && result == false) {
-                result = true
-                continue
-            }
-            else if (result == false) {
-                continue
-            }
-            else if (result == true) {
-                //Pass and perform the code
-            }
-        }
+        // if (inIf) {
+        //     testCond = current.trim()
+        //     //console.log(testCond)
+        //     if (testCond == "End If") {
+        //         inIf = false
+        //         result = null
+        //         continue
+        //     }
+        //     else if (testCond == "Else" && result == true) {
+        //         result = false
+        //         continue
+        //     }
+        //     else if (testCond == "Else" && result == false) {
+        //         result = true
+        //         continue
+        //     }
+        //     else if (result == false) {
+        //         continue
+        //     }
+        //     else if (result == true) {
+        //         //Pass and perform the code
+        //     }
+        // }
 
         //Checks if the line is inside a Select statement
-        if (inSelect) {
-            if (current == "End Select") {
-                finishedCase = true
-                inSelect = false
-                continue
-            }
-            else if (!foundCase) {
-                if (current.startsWith("Case ")) {
-                    caseEx = current.substring(5)
-                    if (caseEx.endsWith(":")) {
-                        caseEx = caseEx.slice(0, caseEx.length - 1)
-                    }
-                    if (evaluatePhrase(caseEx.toString()).toString() == compareEx) {
-                        foundCase = true
-                        finishedCase = false
-                        continue
-                    }
-                }
-                else if (current.startsWith("Default") && !foundCase) {
-                    foundCase = true
-                    finishedCase = false
-                    continue
-                }
-                continue
-            }
-            else if (current.startsWith("Default") && foundCase) {
-                finishedCase = true
-                continue
-            }
-            else {
-                if (current.startsWith("Case")) {
-                    finishedCase = true
-                    continue
-                }
-                else if (finishedCase)
-                    continue
-                //console.log("pass")
-                //Pass and perform the code
-            }
-
-        }
+        // if (inSelect) {
+        //     if (current == "End Select") {
+        //         finishedCase = true
+        //         inSelect = false
+        //         continue
+        //     }
+        //     else if (!foundCase) {
+        //         if (current.startsWith("Case ")) {
+        //             caseEx = current.substring(5)
+        //             if (caseEx.endsWith(":")) {
+        //                 caseEx = caseEx.slice(0, caseEx.length - 1)
+        //             }
+        //             if (evaluatePhrase(caseEx.toString()).toString() == compareEx) {
+        //                 foundCase = true
+        //                 finishedCase = false
+        //                 continue
+        //             }
+        //         }
+        //         else if (current.startsWith("Default") && !foundCase) {
+        //             foundCase = true
+        //             finishedCase = false
+        //             continue
+        //         }
+        //         continue
+        //     }
+        //     else if (current.startsWith("Default") && foundCase) {
+        //         finishedCase = true
+        //         continue
+        //     }
+        //     else {
+        //         if (current.startsWith("Case")) {
+        //             finishedCase = true
+        //             continue
+        //         }
+        //         else if (finishedCase)
+        //             continue
+        //         //console.log("pass")
+        //         //Pass and perform the code
+        //     }
+        //
+        // }
 
         if (current == "") {
             // Do nothing
@@ -451,25 +452,93 @@ function executeCode(line) {
             }
 
         } else if (current.startsWith("If ")) {
-            var ifCond = current.substring(3).trim()
-            if (ifCond.endsWith("Then")) {
-                ifCond = ifCond.slice(0, ifCond.length - 4)
-                inIf = true
-                //console.log(ifCond)
-                ifResult = getConditionResult(ifCond.toString())
-                //console.log(ifResult)
-            }
-            else {
-                error("If statement conditions must be followed with \"Then\"")
+            // var ifCond = current.substring(3).trim()
+            // if (ifCond.endsWith("Then")) {
+            //     ifCond = ifCond.slice(0, ifCond.length - 4)
+            //     inIf = true
+            //     //console.log(ifCond)
+            //     ifResult = getConditionResult(ifCond.toString())
+            //     //console.log(ifResult)
+            // }
+            // else {
+            //     error("If statement conditions must be followed with \"Then\"")
+            // }
+            if (current.endsWith("Then")){
+                evaluate = current.substring(3,current.length-5);
+                if (evaluatePhrase(evaluate)){
+                    //Do nothing
+                } else {
+                    var loop = True;
+                    var stack = [];
+                    while (loop) {
+                        if (code[i].startsWith("End If")){
+                            if (stack.length == 0){
+                                i++;
+                                loop = False;
+                            } else {
+                                stack.pop();
+                                i++;
+                            }
+                        } else if (code[i].startsWith("Else")) {
+                            if (stack.length == 0){
+                                i++;
+                                loop = False;
+                            } else {
+                                i++;
+                            }
+                        } else{
+                            i++;
+                        }
+                    }
+                }
+            } else if (current.startsWith("Else If ")) {
+                evaluate = current.substring(7,current.length-5);
+                if (evaluatePhrase(evaluate)){
+                    //Do nothing
+                } else {
+                    var loop = True;
+                    var stack = [];
+                    while (loop) {
+                        if (code[i].startsWith("End If")){
+                            if (stack.length == 0){
+                                i++;
+                                loop = False;
+                            } else {
+                                stack.pop();
+                                i++;
+                            }
+                        } else if (code[i].startsWith("Else")) {
+                            if (stack.length == 0){
+                                i++;
+                                loop = False;
+                            } else {
+                                i++;
+                            }
+                        } else{
+                            i++;
+                        }
+                    }
+                }
+            } else if (current.startsWith("Else ")) {
+                // Do nothing
+            } else if (current.startsWith("End If ")) {
+
+            } else {
+                error("You can not have an if statement that does not end in a \"Then\" statement");
             }
 
+
+
+            //working
+
+
         } else if (current.startsWith("Select ")) {
-            finishedCase = true
-            foundCase = false
-            selectCond = current.substring(7).trim()
-            compareEx = evaluatePhrase(selectCond.toString()).toString()
-            inSelect = true
-            //console.log(selectCond)
+            // finishedCase = true
+            // foundCase = false
+            // selectCond = current.substring(7).trim()
+            // compareEx = evaluatePhrase(selectCond.toString()).toString()
+            // inSelect = true
+            // //console.log(selectCond)
 
         } else if (current.startsWith("While ")) {
             evaluate = current.substring(6);
@@ -1091,7 +1160,7 @@ function toggleHelp() {
     {
         help.classList.remove("show");
         question.classList.remove("show");
-    } 
+    }
     else
     {
         help.classList.add("show");
